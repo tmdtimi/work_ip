@@ -1,0 +1,46 @@
+snmpvisual:
+  name: snmp-visualization
+  port: 8081
+  eurekaurl: http://root:root@10.21.13.52:8001/eureka/
+
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+#    url: jdbc:mysql://133.40.185.9:8307/networkmonitor?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+#    username: monitor
+#    password: monitor@321
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    url: jdbc:mysql://10.21.13.52:3307/test?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: ${snmpvisual.name}
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: on
+
+server:
+  port: ${snmpvisual.port}
+
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${snmpvisual.eurekaurl}
+#      defaultZone: http://root:root@10.21.13.52:8001/eureka/
+
+
+logging:
+  config: classpath:log4j2-spring.xml
+#logging:
+#  level:
+#    root: warn
+#    com.ai.snmpvisual.repository.mapper: trace
+#  pattern:
+#    console: '%p%m%n'

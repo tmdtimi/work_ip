@@ -1,0 +1,16 @@
+树形查询改为平铺
+CREATE VIEW view_site_dev_port AS
+SELECT
+dev.machine_site AS dev_site,
+f.uk_dev_ip AS dev_ip,
+ping.connectivity AS dev_status,
+s.sys_name AS dev_name,
+t.if_descr AS port_name,
+t.if_admin_status port_admin_status,
+t.if_oper_status port_oper_status
+FROM
+	port_focus f
+	LEFT JOIN monitor_dev dev ON (f.uk_dev_ip = dev.uk_devip)
+	LEFT JOIN dev_ping ping ON (f.uk_dev_ip = ping.dev_ip)
+	LEFT JOIN sys_name s ON (f.uk_dev_ip = s.dev_ip)
+	LEFT JOIN if_table t ON (f.uk_dev_ip = t.dev_ip AND f.uk_idx = t.idx AND f.focus_status = 1);

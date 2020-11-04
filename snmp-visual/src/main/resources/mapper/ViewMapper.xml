@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ai.snmpvisual.repository.mapper.ViewMapper">
+
+    <select id="getViewSysNameCpuMemorySlot" resultType="com.ai.snmpvisual.model.ViewSysNameCpuMemorySlot">
+        SELECT * FROM view_sysname_cpu_memory_slot
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="countNumViewSysNameCpuMemorySlot" resultType="int">
+        SELECT count(*) from view_sysname_cpu_memory_slot
+    </select>
+
+    <select id="getViewIfTableIfXTable" resultType="com.ai.snmpvisual.model.ViewIfTableIfXTable">
+        SELECT * FROM view_if_table_if_x_table WHERE dev_ip = #{obj.devIp}
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="countNumViewIfTableIfXTable" resultType="int">
+        SELECT count(*) from view_if_table_if_x_table
+    </select>
+
+    <select id="getViewIfTableIfXTableNow" resultType="com.ai.snmpvisual.model.ViewIfTableIfXTableNow">
+        SELECT * FROM view_if_table_if_x_table_now
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="countNumViewIfTableIfXTableNow" resultType="int">
+        SELECT count(*) from view_if_table_if_x_table_now
+    </select>
+
+    <select id="getViewTrendIfXTable" resultType="com.ai.snmpvisual.model.ViewTrendIfXTable">
+        SELECT * FROM view_trend_if_x_table
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="countNumViewTrendIfXTable" resultType="int">
+        SELECT count(*) from view_trend_if_x_table
+    </select>
+
+    <select id="getViewTrendInetCidrRouteNumber" resultType="com.ai.snmpvisual.model.ViewTrendInetCidrRouteNumber">
+        SELECT * FROM view_trend_inet_cidr_route_number
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="countNumViewTrendInetCidrRouteNumber" resultType="int">
+        SELECT count(*) from view_trend_inet_cidr_route_number
+    </select>
+
+    <select id="getTrendIfxTable" parameterType="String" resultType="com.ai.snmpvisual.model.ViewTrendIfXTable">
+        SELECT * FROM view_trend_if_x_table WHERE  1= 1
+        <if test="null != dev_ip and ''!= dev_ip"> AND ip = #{dev_ip}</if>
+        <if test="null != idx and ''!= idx"> AND if_index = #{idx}</if>
+        <if test="null != start_time and ''!= start_time"> AND `time` >= #{start_time}</if>
+        <if test="null != end_time and ''!= end_time"> AND #{end_time} >= `time` </if>
+        ORDER BY `time` DESC
+    </select>
+
+
+    <select id="getPortInfo" resultType="com.ai.snmpvisual.model.ViewPortInfo">
+        SELECT * FROM view_port_info WHERE 1 = 1
+        <if test="null != sys_name and ''!= sys_name"> AND sys_name = #{sys_name}</if>
+        <if test="null != ip and ''!= ip"> AND ip = #{ip}</if>
+        <if test="null != if_name and ''!= if_name"> AND if_name = #{if_name}</if>
+        <if test="null != admin_status and ''!= admin_status"> AND admin_status = #{admin_status} </if>
+        <if test="null != oper_status and ''!= oper_status"> AND oper_status = #{oper_status} </if>
+        ORDER BY in_octets DESC
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="getPortInfoAbnormal" resultType="com.ai.snmpvisual.model.ViewPortInfo">
+        SELECT * FROM view_port_info WHERE 1 = 1
+        <if test="null != sys_name and ''!= sys_name"> AND sys_name = #{sys_name}</if>
+        <if test="null != ip and ''!= ip"> AND ip = #{ip}</if>
+        <if test="null != if_name and ''!= if_name"> AND if_name = #{if_name}</if>
+        AND (admin_status = '1' AND oper_status = '2') OR (admin_status = '2' AND oper_status = '1')
+        ORDER BY in_octets DESC
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="countNumViewPortInfo" resultType="int">
+        SELECT COUNT(*) FROM  view_port_info  WHERE 1 = 1
+        <if test="null != sys_name and ''!= sys_name"> AND sys_name = #{sys_name}</if>
+        <if test="null != ip and ''!= ip"> AND ip = #{ip}</if>
+        <if test="null != if_name and ''!= if_name"> AND if_name = #{if_name}</if>
+        <if test="null != admin_status and ''!= admin_status"> AND admin_status = #{admin_status}</if>
+        <if test="null != oper_status and ''!= oper_status"> AND oper_status = #{oper_status}</if>
+    </select>
+
+    <select id="getViewTrendIfXTableByIPAndIfName" parameterType="String" resultType="com.ai.snmpvisual.model.ViewTrendIfXTable">
+        SELECT * FROM view_trend_if_x_table WHERE ip = #{ip} AND if_name = #{if_name} ORDER BY `time` DESC LIMIT 2;
+    </select>
+
+    <select id="getH3CViewSysNameCpuMemorySlot" resultType="com.ai.snmpvisual.model.ViewH3cSysnameCpuMemorySlot">
+        SELECT * FROM view_h3c_sysname_cpu_memory_slot
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="countNumViewH3cSysnameCpuMemorySlot" resultType="int">
+        SELECT count(*) FROM view_h3c_sysname_cpu_memory_slot
+    </select>
+
+    <select id="getDeviceInfo" resultType="com.ai.snmpvisual.model.Device">
+        SELECT * FROM view_device_info
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="getViewDeviceInfoNum" resultType="int">
+        SELECT count(*) FROM view_device_info
+    </select>
+
+    <select id="getRouteManageInfo" resultType="com.ai.snmpvisual.model.ViewRouteManage">
+        SELECT * FROM view_route_manage WHERE 1 = 1
+        <if test="null != obj.destIp and ''!= obj.destIp"> AND dest_ip = #{obj.destIp}</if>
+        <if test="null != obj.startTime and ''!= obj.startTime"> AND `time` >= #{obj.startTime}</if>
+        <if test="null != obj.endTime and ''!= obj.endTime"> AND #{obj.endTime} >= `time` </if>
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="countNumViewRouteManage" resultType="int">
+        SELECT COUNT(*) FROM view_route_manage WHERE 1 = 1
+        <if test="null != obj.destIp and ''!= obj.destIp"> AND dest_ip = #{obj.destIp}</if>
+        <if test="null != obj.startTime and ''!= obj.startTime"> AND `time` >= #{obj.startTime}</if>
+        <if test="null != obj.endTime and ''!= obj.endTime"> AND #{obj.endTime} >= `time` </if>
+    </select>
+
+    <select id="getViewInterfaceNameIp" parameterType="String" resultType="com.ai.snmpvisual.model.ViewInterfaceNameIp">
+        SELECT * FROM view_interface_name_ip WHERE dev_ip = #{dev_ip}
+    </select>
+
+    <select id="getDevIpAndName" resultType="com.ai.snmpvisual.vo.DevIPAndNameVo">
+        SELECT DISTINCT dev_ip, sys_name FROM view_device_info
+    </select>
+
+    <select id="getIfNameByIpOrSysName" parameterType="string" resultType="string">
+        SELECT if_name FROM view_port_info WHERE 1=1
+        <if test="null != ip and ''!= ip"> AND ip = #{ip}</if>
+        <if test="null != sys_name and ''!= sys_name"> AND sys_name = #{sys_name}</if>
+    </select>
+
+    <select id="getIdxByIpAndIfName" resultType="string">
+        SELECT idx FROM if_x_table WHERE dev_ip = #{dev_ip} AND if_name = #{if_name}
+    </select>
+
+    <select id="getCPUTop10" resultType="com.ai.snmpvisual.model.Device">
+        SELECT  * FROM view_device_info  ORDER BY cpu_dev_duty DESC LIMIT 10
+    </select>
+
+    <select id="getHwMemTop10" resultType="com.ai.snmpvisual.model.Device">
+        SELECT * FROM view_device_info WHERE hw_memory_dev_free64 IS NOT NULL  ORDER BY hw_memory_dev_free64 ASC LiMIT 10
+    </select>
+
+    <select id="getH3cMemTop10" resultType="com.ai.snmpvisual.model.Device">
+        SELECT * FROM view_device_info WHERE h3c_memory IS NOT NULL ORDER BY h3c_memory DESC LiMIT 10
+    </select>
+
+    <select id="getZteMemTop10" resultType="com.ai.snmpvisual.model.Device">
+        SELECT * FROM view_device_info WHERE zte_used_memory IS NOT NULL ORDER BY zte_used_memory DESC LiMIT 10
+    </select>
+
+    <select id="getPortInfoVo" resultType="com.ai.snmpvisual.vo.PortInfoVo">
+        SELECT sys_name, ip, if_name FROM view_port_info
+    </select>
+
+    <select id="getConnectivity" parameterType="string" resultType="string">
+        SELECT connectivity FROM dev_ping WHERE dev_ip = #{dev_ip}
+    </select>
+
+    <resultMap id="getPortStatus" type="com.ai.snmpvisual.model.ViewDevSite">
+        <result column="dev_site" property="site"/>
+        <collection property="devInfos" ofType="com.ai.snmpvisual.model.ViewDevSite$DevInfo">
+            <result column="dev_status" property="devStatus"/>
+            <result column="dev_ip" property="devIp"/>
+            <result column="dev_name" property="devName"/>
+            <collection property="portInfos" ofType="com.ai.snmpvisual.model.ViewDevSite$PortInfo">
+                <result column="port_admin_status" property="portAdminStatus"/>
+                <result column="port_oper_status" property="portOperStatus"/>
+                <result column="port_name" property="portName"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="getPortRunningStatus" resultMap="getPortStatus">
+        select * from view_dev_site
+        <if test="null != machineSite">
+            where dev_site=#{machineSite}
+        </if>
+    </select>
+
+    <resultMap id="getDevStatus" type="com.ai.snmpvisual.model.ViewDevSite">
+        <result column="dev_site" property="site"/>
+        <collection property="devInfos" ofType="com.ai.snmpvisual.model.ViewDevSite$DevInfo">
+            <result column="dev_status" property="devStatus"/>
+            <result column="dev_ip" property="devIp"/>
+            <result column="dev_name" property="devName"/>
+        </collection>
+    </resultMap>
+
+    <select id="getDevRunningStatus" resultMap="getDevStatus" >
+        select * from view_dev_site
+        <if test="null != machineSite">
+            where dev_site=#{machineSite}
+        </if>
+    </select>
+
+    <select id="countNumViewPortInfoAbnormal" resultType="int">
+        SELECT COUNT(*) FROM  view_port_info  WHERE 1 = 1
+        <if test="null != sys_name and ''!= sys_name"> AND sys_name = #{sys_name}</if>
+        <if test="null != ip and ''!= ip"> AND ip = #{ip}</if>
+        <if test="null != if_name and ''!= if_name"> AND if_name = #{if_name}</if>
+        AND (admin_status = '1' AND oper_status = '2') OR (admin_status = '2' AND oper_status = '1')
+    </select>
+
+    <select id="countNumViewPortInfoNoState" resultType="int">
+        SELECT COUNT(*) FROM  view_port_info  WHERE 1 = 1
+        <if test="null != sys_name and ''!= sys_name"> AND sys_name = #{sys_name}</if>
+        <if test="null != ip and ''!= ip"> AND ip = #{ip}</if>
+        <if test="null != if_name and ''!= if_name"> AND if_name = #{if_name}</if>
+    </select>
+
+    <select id="getViewSiteDevPort" resultType="com.ai.snmpvisual.model.ViewSiteDevPort">
+        SELECT * FROM view_site_dev_port
+    </select>
+
+    <select id="getSiteDevPorts" resultType="com.ai.snmpvisual.model.ViewSiteDevPort">
+        SELECT * FROM view_site_dev_port WHERE 1 = 1
+        <if test="null != sys_name and ''!= sys_name"> AND sys_name = #{sys_name}</if>
+        <if test="null != ip and ''!= ip"> AND ip = #{ip}</if>
+        <if test="null != if_name and ''!= if_name"> AND if_name = #{if_name}</if>
+        <if test="null != admin_status and ''!= admin_status"> AND admin_status = #{admin_status} </if>
+        <if test="null != oper_status and ''!= oper_status"> AND oper_status = #{oper_status} </if>
+        ORDER BY in_octets DESC
+        <if test="offSet!=null and pageSize!=null"></if>
+        limit #{pageSize} offset #{offSet}
+    </select>
+
+
+    <select id="getIpPort" resultType="com.ai.snmpvisual.model.ViewPortInfo">
+        SELECT * FROM view_port_info WHERE 1 = 1
+        <if test="null != sys_name and ''!= sys_name"> AND sys_name = #{sys_name}</if>
+        <if test="null != ip and ''!= ip"> AND ip = #{ip}</if>
+        <if test="null != if_names and ''!= if_names"> AND if_name IN #{if_names}</if>
+        <if test="null != admin_status and ''!= admin_status"> AND admin_status = #{admin_status} </if>
+        <if test="null != oper_status and ''!= oper_status"> AND oper_status = #{oper_status} </if>
+        ORDER BY in_octets DESC
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+
+    <select id="countIpPorts" resultType="int">
+        SELECT COUNT(*) FROM  view_port_info  WHERE 1 = 1
+        <if test="null != sys_name and ''!= sys_name"> AND sys_name = #{sys_name}</if>
+        <if test="null != ip and ''!= ip"> AND ip = #{ip}</if>
+        <if test="null != if_names and ''!= if_names"> AND if_name IN {if_names}</if>
+        <if test="null != admin_status and ''!= admin_status"> AND admin_status = #{admin_status}</if>
+        <if test="null != oper_status and ''!= oper_status"> AND oper_status = #{oper_status}</if>
+    </select>
+
+    <select id="getIpPortAbnormal" resultType="com.ai.snmpvisual.model.ViewPortInfo">
+        SELECT * FROM view_port_info WHERE 1 = 1
+        <if test="null != sys_name and ''!= sys_name"> AND sys_name = #{sys_name}</if>
+        <if test="null != ip and ''!= ip"> AND ip = #{ip}</if>
+        <if test="null != if_names and ''!= if_names"> AND if_name IN #{if_names}</if>
+        AND (admin_status = '1' AND oper_status = '2') OR (admin_status = '2' AND oper_status = '1')
+        ORDER BY in_octets DESC
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+
+    <select id="countIpPortAbnormal" resultType="int">
+        SELECT COUNT(*) FROM  view_port_info  WHERE 1 = 1
+        <if test="null != sys_name and ''!= sys_name"> AND sys_name = #{sys_name}</if>
+        <if test="null != ip and ''!= ip"> AND ip = #{ip}</if>
+        <if test="null != if_names and ''!= if_names"> AND if_name = #{if_names}</if>
+        AND (admin_status = '1' AND oper_status = '2') OR (admin_status = '2' AND oper_status = '1')
+    </select>
+
+
+    <select id="countIpPortNoState" resultType="int">
+        SELECT COUNT(*) FROM  view_port_info  WHERE 1 = 1
+        <if test="null != sys_name and ''!= sys_name"> AND sys_name = #{sys_name}</if>
+        <if test="null != ip and ''!= ip"> AND ip = #{ip}</if>
+        <if test="null != if_names and ''!= if_names"> AND if_name IN #{if_names}</if>
+    </select>
+
+
+
+    <select id="getDevSitePortByIp" resultType="com.ai.snmpvisual.model.ViewPortInfo">
+        SELECT * FROM view_port_info WHERE 1=1
+        <if test="null != devIp and ''!= devIp"> AND ip = #{devIp}</if>
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="getDevSitePortByIpAndPort" resultType="com.ai.snmpvisual.model.ViewPortInfo">
+        SELECT * FROM view_port_info
+        <foreach collection="infos" index="index" item="item" open=" WHERE" >
+        (
+            <if test="null != item.devIp and ''!= item.devIp"> ip = #{item.devIp}</if>
+            <if test="null != item.portName and item.portName.size != 0">
+                 AND if_name in
+                <foreach collection="item.portName" item="ifName" open="(" close=")" separator=",">
+                    #{ifName}
+                </foreach>
+            </if>
+            <if test="index == infos.size-1">
+                )
+            </if>
+            <if test="index != infos.size-1">
+                ) or
+            </if>
+        </foreach>
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+
+    <select id="getDevPortNum" resultType="int">
+        SELECT COUNT(*) FROM view_port_info WHERE 1 = 1
+        <if test="null != devIp and ''!= devIp"> AND ip = #{devIp}</if>
+    </select>
+
+    <select id="getDevPortNumByIpAndPort" resultType="int">
+        SELECT COUNT(*) FROM view_port_info
+        <foreach collection="infos" index="index" item="item" open=" WHERE" >
+            (
+            <if test="null != item.devIp and ''!= item.devIp"> ip = #{item.devIp}</if>
+            <if test="null != item.portName and item.portName.size != 0">
+                AND if_name in
+                <foreach collection="item.portName" item="ifName" open="(" close=")" separator=",">
+                    #{ifName}
+                </foreach>
+            </if>
+            <if test="index == infos.size-1">
+                )
+            </if>
+            <if test="index != infos.size-1">
+                ) or
+            </if>
+        </foreach>
+    </select>
+
+    <select id="getAllDevPort" resultType="com.ai.snmpvisual.model.ViewPortInfo">
+        SELECT * FROM view_port_info WHERE 1=1
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="getAllDevPortNum" resultType="int">
+        SELECT count(*) FROM view_port_info
+    </select>
+
+    <select id="getUpThreshold" resultType="String">
+        SELECT uplink_bandwidth_utilization FROM monitor_threshold_uplink_bandwidth limit 1
+    </select>
+
+    <select id="getDownThreshold" resultType="String">
+        SELECT downlink_bandwidth_utilization FROM monitor_threshold_downlink_bandwidth limit 1
+    </select>
+
+    <select id="getDevNumInfo"  resultType="com.ai.snmpvisual.vo.MonitorDevStatus">
+        SELECT IFNULL(B.connectivity,-1),B.create_time FROM monitor_dev AS A LEFT JOIN dev_ping AS B on A.uk_devip=B.dev_ip
+    </select>
+
+
+    <select id="getFocusPortInfo" resultType="com.ai.snmpvisual.model.ViewPortInfo">
+        SELECT * FROM view_port_info
+    </select>
+
+    <select id="getAllPortNum" resultType="int">
+        SELECT count(*) FROM if_table;
+    </select>
+
+    <select id="getAlarmEventInfo" resultType="com.ai.snmpvisual.vo.AlarmEventInfo">
+        SELECT event_desc,event_msg FROM event_alarm
+    </select>
+
+    <select id="getAlarmInfo" resultType="com.ai.snmpvisual.vo.AlarmReceive">
+        SELECT A.alarm_id , B.severity
+        FROM alarm_receive AS A
+        LEFT JOIN alarm_dict AS B
+        ON A.alarm_id=B.trap_oid
+    </select>
+
+
+    <select id="getViewSiteDevSlot" resultType="com.ai.snmpvisual.model.ViewSiteDevSlot">
+        SELECT * FROM view_site_dev_slot
+    </select>
+
+
+    <select id="getDevSiteSlotByIpAndSlot" resultType="com.ai.snmpvisual.model.Device">
+        SELECT * FROM view_device_info
+        <foreach collection="infos" index="index" item="item" open=" WHERE" >
+            (
+            <if test="null != item.devIp and ''!= item.devIp"> dev_ip = #{item.devIp}</if>
+            <if test="null != item.slotDesc and item.slotDesc.size != 0">
+                AND slot_desc in
+                <foreach collection="item.slotDesc" item="slot" open="(" close=")" separator=",">
+                    #{slot}
+                </foreach>
+            </if>
+            <if test="index == infos.size-1">
+                )
+            </if>
+            <if test="index != infos.size-1">
+                ) or
+            </if>
+        </foreach>
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="getDevSiteSlotByIp" resultType="com.ai.snmpvisual.model.Device">
+        SELECT * FROM view_device_info WHERE 1=1
+        <if test="null != devIp and ''!= devIp"> AND dev_ip = #{devIp}</if>
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+    <select id="getAllDevSlot" resultType="com.ai.snmpvisual.model.Device">
+        SELECT * FROM view_device_info WHERE 1=1
+        <if test="offSet!=null and pageSize!=null">
+            limit #{pageSize} offset #{offSet}
+        </if>
+    </select>
+
+
+    <select id="getDevSlotNumByIpAndSlot" resultType="int">
+        SELECT COUNT(*) FROM view_device_info
+        <foreach collection="infos" index="index" item="item" open=" WHERE" >
+            (
+            <if test="null != item.devIp and ''!= item.devIp"> dev_ip = #{item.devIp}</if>
+            <if test="null != item.slotDesc and item.slotDesc.size != 0">
+                AND slot_desc in
+                <foreach collection="item.slotDesc" item="slot" open="(" close=")" separator=",">
+                    #{slot}
+                </foreach>
+            </if>
+            <if test="index == infos.size-1">
+                )
+            </if>
+            <if test="index != infos.size-1">
+                ) or
+            </if>
+        </foreach>
+    </select>
+
+    <select id="getDevSlotNum" resultType="int">
+        SELECT COUNT(*) FROM view_device_info WHERE 1 = 1
+        <if test="null != devIp and ''!= devIp"> AND dev_ip = #{devIp}</if>
+    </select>
+
+
+</mapper>

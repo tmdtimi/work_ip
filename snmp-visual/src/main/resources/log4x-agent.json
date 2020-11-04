@@ -1,0 +1,108 @@
+{
+  "log4x.agent.wrapper.type": "javassist",
+  "log4x.agent.write.bytecode": "true",
+  "log4x.agent.write.directory": "",
+
+  "log4x.agent.transform.tag": "bj",
+  "log4x.agent.logger.file": "",
+  "log4x.agent.logger.file.size": "10485760",
+  "log4x.agent.logger.level": "INFO",
+
+  "transforms": [
+    {
+      "tag": "bj",
+      "classes": [
+        { "tag": "appframe", "name": "com.ai.appframe2.complex.service.proxy.impl.DAODataSourceInterceptorImpl", "adapter": "com.ai.aif.log4x.agent.trans.adapter.impl.appframe.DAODataSourceAdapter"},
+        { "tag": "appframe", "name": "com.ai.appframe2.complex.transaction.impl.LocalMutilTransactionImpl",
+          "adapter": "com.ai.aif.log4x.agent.trans.adapter.impl.TimeTrackingAdapter",
+          "methods": [{ "header": "public java.sql.Connection getConnection()" }],
+          "attrs": { "threshold": 30 }
+        },
+        { "tag": "appframe", "name": "com.asiainfo.appframe.ext.exeframe.cache.util.CacheUtil",
+          "adapter": "com.ai.aif.log4x.agent.trans.adapter.impl.TimeTrackingAdapter",
+          "methods": [
+            {"header": "boolean containsKey(Class clazz, String key)"},
+            {"header": "boolean containsKey(String dataType, String key)"},
+            {"header": "Long decr(String dataType, String key)"},
+            {"header": "Long incr(String dataType, String key)"},
+            {"header": "java.util.Set keySet(String dataType)"},
+            {"header": "java.util.Map readMap(String dataType, String key)"},
+            {"header": "Object readObject(Class clazz, String key)"},
+            {"header": "Object readObject(String dataType, String key)"},
+            {"header": "String readString(String dataType, String key)"},
+            {"header": "void remove(Class clazz, String key)"},
+            {"header": "void remove(String dataType, String key)"},
+            {"header": "void removeAll(String dataType)"},
+            {"header": "String setEx(String dataType, String key, Integer expireTime, String value)"},
+            {"header": "Long setNx(String dataType, String key, String value)"},
+            {"header": "void writeMap(String dataType, String key, java.util.Map map)"},
+            {"header": "void writeMap(String dataType, String key, java.util.Map map, Integer expireTime)"},
+            {"header": "void writeObject(Class clazz, String key, Object obj)"},
+            {"header": "void writeObject(Class clazz, String key, Object obj, Integer expireTime)"},
+            {"header": "void writeObject(String dataType, String key, Object obj)"},
+            {"header": "void writeObject(String dataType, String key, Object obj, Integer expireTime)"},
+            {"header": "void writeString(String dataType, String key, String value)"},
+            {"header": "void writeString(String dataType, String key, String value, Integer expireTime)"}
+          ],
+          "attrs": { "threshold": 10, "callType": "AICache" }
+        },
+        { "tag": "ojdbc", "name": "oracle.jdbc.driver.PhysicalConnection" },
+        { "tag": "ojdbc", "name": "oracle.jdbc.driver.OracleStatement" },
+        { "tag": "ojdbc", "name": "oracle.jdbc.driver.OraclePreparedStatement" },
+        { "tag": "mysql", "name": "com.mysql.jdbc.ConnectionImpl" },
+        { "tag": "mysql", "name": "com.mysql.jdbc.StatementImpl" },
+        { "tag": "mysql", "name": "com.mysql.jdbc.PreparedStatement" },
+        { "tag": "csf", "name": "com.ai.aif.csf.client.service.wrapper.ClientProtocolWrapper" },
+        { "tag": "csf", "name": "com.ai.aif.csf.protocol.socket.event.handler.RequestEventHandler" },
+        { "tag": "csf", "name": "com.ai.aif.csf.protocol.remote.server.access.RemoteAccessImpl"},
+        { "tag": "csf", "name": "com.ai.aif.csf.protocol.ejb.server.access.EJBAccessImpl"},
+        { "tag": "csf", "name": "com.ai.aif.csf.executor.request.worker.RequestTask",
+          "adapter": "com.ai.aif.log4x.agent.trans.adapter.impl.csf.SyncRequestTaskAdapter",
+          "methods": [{"header": "java.util.Map call()"}]
+        },
+        { "tag": "msgframe", "name": "com.ai.aif.msgframe.common.route.impl.AbstractStrategy",
+          "adapter": "com.ai.aif.log4x.agent.trans.adapter.impl.msgframe.v200.AbstractStrategyAdapter"},
+        { "tag": "msgframe", "name": "com.ai.aif.msgframe.consumer.mq.AConsumerProviderModel",
+          "adapter": "com.ai.aif.log4x.agent.trans.adapter.impl.msgframe.v200.AConsumerProviderModelAdapter",
+          "methods": [
+            {"header": "Object processMsg(com.ai.aif.msgframe.common.message.MsgFMessage msg, String subclass)"},
+            {"header": "Object processMsg(com.ai.aif.msgframe.common.message.MsgFMessage msg, String[] subclass)"},
+            {"header": "Object processMsg(com.ai.aif.msgframe.common.message.MsgFMessage msg, com.ai.aif.msgframe.common.IConsumerProcessor processor)"},
+            {"header": "Object processMsg(com.ai.aif.msgframe.common.message.MsgFMessage msg, com.ai.aif.msgframe.common.IConsumerProcessor[] processor)"},
+            {"header": "Object processException(com.ai.aif.msgframe.common.message.MsgFMessage msg, Exception e)"},
+            {"header": "Object processException(java.util.List msgList, Exception e)"}
+          ]
+        },
+        { "tag": "msgframe", "name": "com.ai.aif.msgframe.MfProducerClient",
+          "adapter": "com.ai.aif.log4x.agent.trans.adapter.impl.msgframe.v200.MfProducerClientAdapter",
+          "methods": [
+            {"header": "void send(String subject, com.ai.aif.msgframe.common.message.MsgFMessage msg)"},
+            {"header": "void sendOrderMsg(String subject, com.ai.aif.msgframe.common.message.MsgFMessage msg, String orderId)"},
+            {"header": "void asyncSend(String subject, com.ai.aif.msgframe.common.message.MsgFMessage msg, com.ai.aif.msgframe.common.CompletionListener completionListener)"}
+          ]
+        },
+        { "tag": "msgframe", "name": "com.ai.aif.msgframe.MfTXProducerClient",
+          "adapter": "com.ai.aif.log4x.agent.trans.adapter.impl.msgframe.v200.MfProducerTxClientAdapter"},
+        { "tag": "remote", "name": "org.jboss.remoting.Client" },
+        { "tag": "remote", "name": "org.jboss.remoting.ServerInvoker" },
+        { "tag": "remote", "name": "org.jboss.remoting.transporter.TransporterClient" },
+        { "tag": "osp", "name": "com.asiainfo.openplatform.isb.http.access.HttpAccessService" },
+        { "tag": "http", "name": "org.apache.commons.httpclient.HttpClient" },
+        { "tag": "osp", "name": "com.asiainfo.openplatform.isb.ws.access.WsAccess" },
+        { "tag": "osp", "name": "com.asiainfo.openplatform.srvctl.impl.InvokeEngineImpl" },
+        { "tag": "osp", "name": "com.asiainfo.openplatform.abilityctl.AbilityControl" },
+        { "tag": "comframe", "name": "com.ai.comframe.vm.workflow.service.impl.WorkflowEngineSVImpl"},
+        { "tag": "comframe", "name": "com.ai.comframe.vm.common.RocketMqHelper"},
+        { "tag": "dubbo", "name": "com.alibaba.dubbo.rpc.filter.EchoFilter"},
+        { "tag": "dubbo", "name": "com.alibaba.dubbo.rpc.protocol.dubbo.filter.FutureFilter"},
+        { "tag": "wade", "name": "com.ailk.web.servlet.PageServlet",
+          "attrs": {"snParamKeyList": "ACCESS_NO,ACCESS_NUM,cond_ACCESS_NO"}
+        },
+        { "tag": "wade", "name": "com.ailk.web.servlet.HttpHandlerServlet",
+          "attrs": {"servletVersion": "2.5", "snParamKeyList": "ACCESS_NO,ACCESS_NUM,cond_ACCESS_NO"}
+        },
+        {}
+      ]
+    }
+  ]
+}

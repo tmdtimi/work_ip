@@ -1,0 +1,9 @@
+CREATE VIEW view_interface_name_ip AS SELECT
+x_table.dev_ip,
+x_table.if_name AS if_name,
+ip_table.ip_ad_ent_addr AS ip_addr,
+ip_table.ip_ad_ent_net_mask AS mask
+FROM
+	if_x_table AS x_table
+	JOIN ip_addr_table AS ip_table ON x_table.dev_ip = ip_table.dev_ip
+	AND x_table.idx = ip_table.ip_ad_ent_if_index;

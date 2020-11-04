@@ -1,0 +1,50 @@
+查询端口信息
+CREATE VIEW view_port_info AS SELECT
+s.sys_name,
+x.dev_ip ip,
+x.if_name,
+x.if_h_c_in_octets in_octets,
+x.if_h_c_out_octets out_octets,
+t.if_oper_status oper_status,
+x.if_high_speed bandwith,
+x.update_time time
+FROM
+	if_x_table x
+	LEFT JOIN sys_name s ON ( x.dev_ip = s.dev_ip )
+	LEFT JOIN if_table t ON ( x.dev_ip = t.dev_ip AND x.idx = t.idx);
+
+
+修改为：  添加了只显示关注的端口
+SELECT
+s.sys_name,
+x.dev_ip ip,
+x.if_name,
+x.if_h_c_in_octets in_octets,
+x.if_h_c_out_octets out_octets,
+t.if_oper_status oper_status,
+x.if_high_speed bandwith,
+x.update_time time
+FROM
+	port_focus f
+	LEFT JOIN	if_x_table x ON ( f.uk_dev_ip = x.dev_ip AND f.uk_idx = x.idx AND f.focus_status = 1 )
+	LEFT JOIN sys_name s ON ( f.uk_dev_ip = s.dev_ip )
+	LEFT JOIN if_table t ON ( f.uk_dev_ip = t.dev_ip AND f.uk_idx = t.idx);
+
+
+修改为：  添加一个 if_admin_status， 用于和 if_oper_status 一起做判断
+CREATE VIEW view_port_info AS
+SELECT
+s.sys_name,
+x.dev_ip ip,
+x.if_name,
+x.if_h_c_in_octets in_octets,
+x.if_h_c_out_octets out_octets,
+t.if_admin_status admin_status,
+t.if_oper_status oper_status,
+x.if_high_speed bandwith,
+x.update_time time
+FROM
+	port_focus f
+	LEFT JOIN	if_x_table x ON ( f.uk_dev_ip = x.dev_ip AND f.uk_idx = x.idx AND f.focus_status = 1 )
+	LEFT JOIN sys_name s ON ( f.uk_dev_ip = s.dev_ip )
+	LEFT JOIN if_table t ON ( f.uk_dev_ip = t.dev_ip AND f.uk_idx = t.idx);

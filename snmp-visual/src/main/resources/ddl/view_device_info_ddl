@@ -1,0 +1,250 @@
+CREATE VIEW view_hw_device AS SELECT
+n.dev_ip,
+n.sys_name,
+s.idx,
+s.hw_slot_desc slot_desc,
+s.hw_slot_oper_status oper_status,
+c.hw_cpu_dev_duty cpu_dev_duty,
+m.hw_memory_dev_size64,
+m.hw_memory_dev_free64,
+null AS h3c_memory
+FROM
+	hw_slot_table s LEFT JOIN sys_name n ON (s.dev_ip = n.dev_ip)
+LEFT JOIN hw_cpu_dev_table c ON (n.dev_ip = c.dev_ip AND s.idx like (c.idx+'%'))
+LEFT JOIN hw_memory_dev_table m ON (c.dev_ip = m.dev_ip AND s.idx like (m.idx+'%'));
+
+
+CREATE VIEW view_h3c_device AS SELECT
+ept.dev_ip,
+sn.sys_name,
+ept.idx,
+ept.ent_physical_name AS slot_desc,
+'2' AS oper_status,
+h3ccpu.h3c_cpu AS cpu_dev_duty,
+null AS hw_memory_dev_size64,
+null AS hw_memory_dev_free64,
+h3cmem.h3c_memory AS h3c_memory
+FROM
+  ent_physical_table as ept
+  Left JOIN h3c_cpu_dev_table as h3ccpu ON
+  h3ccpu.idx = ept.idx AND h3ccpu.dev_ip = ept.dev_ip
+  Left JOIN h3c_mem_dev_table as h3cmem ON
+  h3cmem.idx = ept.idx AND h3cmem.dev_ip = ept.dev_ip
+  Left JOIN sys_name as sn ON
+  ept.dev_ip = sn.dev_ip
+  WHERE ept.`ent_physical_name` LIKE '%MPU%' or ept.`ent_physical_name` LIKE '%SPU%';
+
+
+
+create view view_device_info
+as
+select * from view_hw_device union all select * from view_h3c_device;
+
+
+
+
+
+
+view_hw_device
+
+
+CREATE VIEW view_hw_device AS
+SELECT
+ `n`.`dev_ip` AS `dev_ip`,
+ `n`.`sys_name` AS `sys_name`,
+ `s`.`idx` AS `idx`,
+ `s`.`hw_slot_desc` AS `slot_desc`,
+ `s`.`hw_slot_oper_status` AS `oper_status`,
+ `c`.`hw_cpu_dev_duty` AS `cpu_dev_duty`,
+ `m`.`hw_memory_dev_size64` AS `hw_memory_dev_size64`,
+ `m`.`hw_memory_dev_free64` AS `hw_memory_dev_free64`,
+ NULL AS `h3c_memory`,
+ NULL AS `zte_total_memory`,
+ NULL AS `zte_used_memory`
+FROM
+ (((
+    `hw_slot_table` `s`
+    LEFT JOIN `sys_name` `n` ON ((
+      `s`.`dev_ip` = `n`.`dev_ip`
+     )))
+   LEFT JOIN `hw_cpu_dev_table` `c` ON (((
+      `n`.`dev_ip` = `c`.`dev_ip`
+      )
+     AND (
+     `s`.`idx` LIKE ( `c`.`idx` + '%' )))))
+  LEFT JOIN `hw_memory_dev_table` `m` ON (((
+     `c`.`dev_ip` = `m`.`dev_ip`
+     )
+   AND (
+ `s`.`idx` LIKE ( `m`.`idx` + '%' )))))
+
+
+
+
+view_h3c_device
+
+CREATE VIEW view_h3c_device AS
+SELECT
+ `ept`.`dev_ip` AS `dev_ip`,
+ `sn`.`sys_name` AS `sys_name`,
+ `ept`.`idx` AS `idx`,
+ `ept`.`ent_physical_name` AS `slot_desc`,
+ '2' AS `oper_status`,
+ `h3ccpu`.`h3c_cpu` AS `cpu_dev_duty`,
+ NULL AS `hw_memory_dev_size64`,
+ NULL AS `hw_memory_dev_free64`,
+ `h3cmem`.`h3c_memory` AS `h3c_memory`,
+ NULL AS `zte_total_memory`,
+ NULL AS `zte_used_memory`
+FROM
+ (((
+    `ent_physical_table` `ept`
+    LEFT JOIN `h3c_cpu_dev_table` `h3ccpu` ON (((
+       `h3ccpu`.`idx` = `ept`.`idx`
+       )
+     AND ( `h3ccpu`.`dev_ip` = `ept`.`dev_ip` ))))
+   LEFT JOIN `h3c_mem_dev_table` `h3cmem` ON (((
+      `h3cmem`.`idx` = `ept`.`idx`
+      )
+    AND ( `h3cmem`.`dev_ip` = `ept`.`dev_ip` ))))
+  LEFT JOIN `sys_name` `sn` ON ((
+    `ept`.`dev_ip` = `sn`.`dev_ip`
+   )))
+WHERE
+ ((
+   `ept`.`ent_physical_name` LIKE '%MPU%'
+  )
+ OR ( `ept`.`ent_physical_name` LIKE '%SPU%' ))
+
+
+
+view_zte_device
+
+CREATE VIEW view_zte_device AS
+SELECT
+ `ept`.`dev_ip` AS `dev_ip`,
+ `sn`.`sys_name` AS `sys_name`,
+ `ept`.`idx` AS `idx`,
+ `ept`.`ent_physical_name` AS `slot_desc`,
+ '2' AS `oper_status`,
+ `zte_cpu`.`utilization` AS `cpu_dev_duty`,
+ NULL AS `hw_memory_dev_size64`,
+ NULL AS `hw_memory_dev_free64`,
+ NULL AS `h3c_memory`,
+ `zte_total_memory`.`total_memory` AS `zte_total_memory`,
+ `zte_used_memory`.`used_memory` AS `zte_used_memory`
+FROM
+ ((((
+     `ent_physical_table` `ept`
+     LEFT JOIN `zte_cpu_5min_utilization` `zte_cpu` ON (((
+        `zte_cpu`.`idx` = `ept`.`zte_idx_convert`
+        )
+      AND ( `zte_cpu`.`dev_ip` = `ept`.`dev_ip` ))))
+    LEFT JOIN `zte_total_memory` ON (((
+       `zte_total_memory`.`idx` = `ept`.`zte_idx_convert`
+       )
+     AND ( `zte_total_memory`.`dev_ip` = `ept`.`dev_ip` ))))
+   LEFT JOIN `zte_used_memory` ON (((
+      `zte_used_memory`.`idx` = `ept`.`zte_idx_convert`
+      )
+    AND ( `zte_total_memory`.`dev_ip` = `ept`.`dev_ip` ))))
+  LEFT JOIN `sys_name` `sn` ON ((
+    `ept`.`dev_ip` = `sn`.`dev_ip`
+   )))
+WHERE
+ (((
+    `ept`.`ent_physical_name` LIKE '%MPU%'
+    )
+  OR ( `ept`.`ent_physical_name` LIKE '%SPU%' ))
+ AND ( `ept`.`ent_physical_mfg_nam` = 'ZTE ' ))
+
+
+view_device_info
+
+CREATE VIEW view_device_info AS
+SELECT
+ `view_hw_device`.`dev_ip` AS `dev_ip`,
+ `view_hw_device`.`sys_name` AS `sys_name`,
+ `view_hw_device`.`idx` AS `idx`,
+ `view_hw_device`.`slot_desc` AS `slot_desc`,
+ `view_hw_device`.`oper_status` AS `oper_status`,
+ `view_hw_device`.`cpu_dev_duty` AS `cpu_dev_duty`,
+ `view_hw_device`.`hw_memory_dev_size64` AS `hw_memory_dev_size64`,
+ `view_hw_device`.`hw_memory_dev_free64` AS `hw_memory_dev_free64`,
+ `view_hw_device`.`h3c_memory` AS `h3c_memory`,
+ `view_hw_device`.`zte_total_memory` AS `zte_total_memory`,
+ `view_hw_device`.`zte_used_memory` AS `zte_used_memory`
+FROM
+ `view_hw_device` UNION ALL
+SELECT
+ `view_h3c_device`.`dev_ip` AS `dev_ip`,
+ `view_h3c_device`.`sys_name` AS `sys_name`,
+ `view_h3c_device`.`idx` AS `idx`,
+ `view_h3c_device`.`slot_desc` AS `slot_desc`,
+ `view_h3c_device`.`oper_status` AS `oper_status`,
+ `view_h3c_device`.`cpu_dev_duty` AS `cpu_dev_duty`,
+ `view_h3c_device`.`hw_memory_dev_size64` AS `hw_memory_dev_size64`,
+ `view_h3c_device`.`hw_memory_dev_free64` AS `hw_memory_dev_free64`,
+ `view_h3c_device`.`h3c_memory` AS `h3c_memory`,
+ `view_h3c_device`.`zte_total_memory` AS `zte_total_memory`,
+ `view_h3c_device`.`zte_used_memory` AS `zte_used_memory`
+FROM
+ `view_h3c_device` UNION ALL
+SELECT
+ `view_zte_device`.`dev_ip` AS `dev_ip`,
+ `view_zte_device`.`sys_name` AS `sys_name`,
+ `view_zte_device`.`idx` AS `idx`,
+ `view_zte_device`.`slot_desc` AS `slot_desc`,
+ `view_zte_device`.`oper_status` AS `oper_status`,
+ `view_zte_device`.`cpu_dev_duty` AS `cpu_dev_duty`,
+ `view_zte_device`.`hw_memory_dev_size64` AS `hw_memory_dev_size64`,
+ `view_zte_device`.`hw_memory_dev_free64` AS `hw_memory_dev_free64`,
+ `view_zte_device`.`h3c_memory` AS `h3c_memory`,
+ `view_zte_device`.`zte_total_memory` AS `zte_total_memory`,
+ `view_zte_device`.`zte_used_memory` AS `zte_used_memory`
+FROM
+ `view_zte_device`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

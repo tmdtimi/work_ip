@@ -1,0 +1,4 @@
+CREATE VIEW view_sysname_cpu_memory_slot AS SELECT n.dev_ip, n.sys_name, s.idx, c.hw_cpu_dev_duty, c.hw_avg_duty_1min, c.hw_avg_duty_5min, m.hw_memory_dev_size, m.hw_memory_dev_free, m.hw_memory_dev_raw_slice_used, m.hw_memory_dev_largest_free, m.hw_memory_dev_fail, m.hw_memory_dev_fail_no_mem, m.hw_memory_dev_size64, m.hw_memory_dev_free64, s.hw_slot_type, s.hw_slot_desc, s.hw_sub_slots, s.hw_slot_oper_status, s.hw_slot_admin_status
+FROM hw_slot_table s LEFT JOIN sys_name n ON (s.dev_ip = n.dev_ip)
+LEFT JOIN hw_cpu_dev_table c ON (n.dev_ip = c.dev_ip AND s.idx like (c.idx+'%'))
+LEFT JOIN hw_memory_dev_table m ON (c.dev_ip = m.dev_ip AND s.idx like (m.idx+'%'));

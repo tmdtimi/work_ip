@@ -1,0 +1,15 @@
+CREATE VIEW view_route_manage AS
+SELECT
+ip_cidr.ip_cidr_route_dest AS dest_ip,
+ip_cidr.ip_cidr_route_mask AS mask,
+ip_cidr.ip_cidr_route_tos AS TOS,
+ip_cidr.ip_cidr_route_next_hop AS next_hop,
+ip_cidr.ip_cidr_route_type AS route_type,
+ip_cidr.ip_cidr_route_proto AS route_proto,
+x_table.if_name,
+ip_cidr.ip_cidr_route_next_hop_a_s AS next_hop_a_s,
+ip_cidr.ip_cidr_route_metric1 AS route_metric,
+ip_cidr.update_time AS time
+FROM
+	ip_cidr_route_table AS ip_cidr
+	LEFT JOIN if_x_table AS x_table ON (ip_cidr.dev_ip = x_table.dev_ip AND ip_cidr.ip_cidr_routeif_index = x_table.idx);

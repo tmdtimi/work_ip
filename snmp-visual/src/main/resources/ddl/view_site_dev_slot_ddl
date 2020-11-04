@@ -1,0 +1,14 @@
+create view view_site_dev_slot AS
+select 
+dev.machine_site AS dev_site,
+device.dev_ip AS dev_ip,
+ping.connectivity AS dev_status,
+device.sys_name AS dev_name,
+device.slot_desc AS slot_desc 
+from view_device_info device 
+LEFT JOIN monitor_dev dev 
+ON(
+	device.dev_ip = dev.uk_devip
+) LEFT JOIN dev_ping ping ON (
+	device.dev_ip = ping.dev_ip
+);

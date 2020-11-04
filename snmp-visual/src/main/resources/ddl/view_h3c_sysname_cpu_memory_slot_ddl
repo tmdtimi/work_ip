@@ -1,0 +1,16 @@
+CREATE VIEW view_h3c_sysname_cpu_memory_slot AS  SELECT
+`ept`.`dev_ip` AS `dev_ip`,
+`sn`.`sys_name` AS `sys_name`,
+`ept`.`idx` AS `idx`,
+`ept`.`ent_physical_name` AS `ent_physical_name`,
+`h3ccpu`.`h3c_cpu` AS `h3c_cpu`,
+`h3cmem`.`h3c_memory` AS `h3c_memory`
+FROM
+  ent_physical_table as ept
+  Left JOIN h3c_cpu_dev_table as h3ccpu ON
+  h3ccpu.idx = ept.idx AND h3ccpu.dev_ip = ept.dev_ip
+  Left JOIN h3c_mem_dev_table as h3cmem ON
+  h3cmem.idx = ept.idx AND h3cmem.dev_ip = ept.dev_ip
+  Left JOIN sys_name as sn ON
+  ept.dev_ip = sn.dev_ip
+  WHERE ept.`ent_physical_name` LIKE '%MPU%' or ept.`ent_physical_name` LIKE '%SPU%';

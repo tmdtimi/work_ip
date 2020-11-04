@@ -1,0 +1,2 @@
+# 接口信息
+CREATE VIEW view_if_table_if_x_table AS SELECT t.dev_ip, t.idx, t.if_index, t.if_descr, xt.if_name, t.if_type, xt.if_high_speed AS bandwith, t.if_phys_address, t.if_admin_status, t.if_oper_status, t.if_last_change FROM if_table t JOIN if_x_table xt ON t.dev_ip = xt.dev_ip AND t.idx = xt.idx;

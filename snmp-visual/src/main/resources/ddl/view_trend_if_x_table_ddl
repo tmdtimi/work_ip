@@ -1,0 +1,2 @@
+# 接口统计趋势
+CREATE VIEW  view_trend_if_x_table AS SELECT t.dev_ip  ip, t.idx if_index, t.if_name if_name ,t.if_high_speed bandwith, t.if_h_c_in_octets in_octets, t.if_h_c_out_octets out_octets, t.update_time time FROM trend_if_x_table AS t;

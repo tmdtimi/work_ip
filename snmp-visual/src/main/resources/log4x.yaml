@@ -1,0 +1,70 @@
+traceEnabled: true
+logEnabled: true
+metricEnabled: true
+# must be a power of 2
+localBufferSize: 4096
+messageBatchSize: 1
+debugEnabled: false
+selfMonitorEnabled: false
+ipConfigPrefix: server.ip
+timeSyncEnabled: false
+ntpServer: 210.72.145.44
+sysCode: MARKET
+# file|kafka
+producerType: kafka
+message:
+  default:
+    topic: LOG4X-MSG-TOPIC
+    # file|discard
+    bufferFullPolicy: discard
+  trace:
+    topic: LOG4X-TRACE-TOPIC
+    probeType: SRV
+    sampleRatio: 1
+    isEntrance: false
+    # file|discard
+    bufferFullPolicy: discard
+  log:
+    topic: LOG4X-LOG-TOPIC
+  metric:
+    topic: LOG4X-METRIC-TOPIC
+    timeInterval: 60
+    thread:
+      enabled: true
+      category:
+        - name: "CSF"
+          pattern: "CsfServerRequestHandleThread"
+        - name: "Spark"
+          pattern: "Spark_"
+    dataSource:
+      enabled: true
+      type: dbcp
+# kafka settings
+kafka:
+  default:
+    bootstrap.servers: 132.80.239.126:8092
+    key.serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+    value.serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+    compression.type: snappy
+    # 32MB
+    buffer.memory: 33554432
+    # for each partition
+    batch.size: 8192
+    # wait up to 100ms before sending
+    linger.ms: 100
+    # greater than 0 may cause record duplication
+    retries: 0
+    acks: 0
+# file settings
+file:
+  dataDir: "${user.home}/log4x/data"
+  bufferedIO: true
+  bufferSize: 8192
+  fileNamePattern: "%d{yyyy-MM-dd}.zip"
+  maxHistory: 7
+# if matched, drop the messages
+filters:
+  - "^.*CheckSV.*heartbeat"
+  - "^.*CommonSV.*getDBSysDate"
+  - "^.*DefaultAction.*getSysDateTime"
+  - "select 1 from dual"

@@ -1,0 +1,2 @@
+路由趋势
+CREATE VIEW view_trend_inet_cidr_route_number AS SELECT t.dev_ip ip, t.inet_cidr_route_number route_num, t.update_time time FROM trend_inet_cidr_route_number AS t;
